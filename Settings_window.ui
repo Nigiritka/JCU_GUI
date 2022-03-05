@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SettingWindow</class>
+ <widget class="QMainWindow" name="SettingWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>700</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTabWidget" name="settingstabWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>700</width>
+      <height>450</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="COM">
+     <attribute name="title">
+      <string>COM settings</string>
+     </attribute>
+    </widget>
+    <widget class="QWidget" name="LOG">
+     <attribute name="title">
+      <string>Log settings</string>
+     </attribute>
+     <widget class="QCheckBox" name="checkBox">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>181</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Log every master's request</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="checkBox_2">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>50</y>
+        <width>191</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Log every slave's reply</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="checkBox_3">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>80</y>
+        <width>181</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Log CRC Errors</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="checkBox_4">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>140</y>
+        <width>181</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Log timestamps</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="checkBox_5">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>110</y>
+        <width>181</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Display CRC Error counter</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>TBD</string>
+     </attribute>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>700</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
