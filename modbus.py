@@ -1,8 +1,12 @@
 import minimalmodbus
 import serial
+
 from ctypes import *
 
+
+
 global instr
+
 
 def check_com():
     try:

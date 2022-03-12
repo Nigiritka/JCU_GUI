@@ -5,10 +5,9 @@
 # 5. Add QtCore to use its time and date for logging. could be miliseconds:)
 # 6. Implement auto repeat function for buttons
 # 9. add standard messages
-
+# 10. transfer COM port list to main window to modbus
 # for lineedit:
-# 10. set readonly
-
+# 11. set readonly
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -20,6 +19,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from COM_Setting_window import *
 
 # Class for creating the Plot
 class Plot(FigureCanvas):
@@ -32,6 +32,8 @@ class Plot(FigureCanvas):
         # make data
         self.x = np.linspace(0, 20, 100)
         self.y = 3*np.sin(self.x) + 5
+        self.z = 3*np.sin(self.x + np.pi*2/3) + 5
+        self.b = 3 * np.sin(self.x + np.pi * 4 / 3) + 5
 
         # Make plots a bit more beautiful
         self.ax.set(xlim=(0, 10), ylim=(0, 10), xticks=np.arange(0, 20), yticks=np.arange(0, 10))
@@ -47,7 +49,9 @@ class Plot(FigureCanvas):
     def update_plot(self):
 
         # plot
-        self.ax.plot(self.x, self.y, linewidth=1.0, label='Angle', color='#03dfd5')
+        self.ax.plot(self.x, self.y, linewidth=1.0, label='Sin', color='#03dfd5')
+        self.ax.plot(self.x, self.z, linewidth=1.0, label='Sin+120', color='#ffb90f')
+        self.ax.plot(self.x, self.b, linewidth=1.0, label='Sin+240', color='#ff00ff')
         # add legent
         self.ax.legend(loc=1, fontsize=8)
 
@@ -546,12 +550,12 @@ class Ui_MainWindow(object):
         self.lable_errors_11.setFont(font)
         self.lable_errors_11.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.lable_errors_11.setObjectName("lable_errors_11")
-        self.label_label_error_overcurrent = QtWidgets.QLabel(self.centralwidget)
-        self.label_label_error_overcurrent.setGeometry(QtCore.QRect(500, 781, 20, 20))
-        self.label_label_error_overcurrent.setText("")
-        self.label_label_error_overcurrent.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
-        self.label_label_error_overcurrent.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_label_error_overcurrent.setObjectName("label_label_error_overcurrent")
+        self.label_error_overcurrent = QtWidgets.QLabel(self.centralwidget)
+        self.label_error_overcurrent.setGeometry(QtCore.QRect(500, 781, 20, 20))
+        self.label_error_overcurrent.setText("")
+        self.label_error_overcurrent.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        self.label_error_overcurrent.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_error_overcurrent.setObjectName("label_label_error_overcurrent")
         self.layoutWidget1 = QtWidgets.QWidget(self.centralwidget)
         self.layoutWidget1.setGeometry(QtCore.QRect(456, 271, 121, 411))
         self.layoutWidget1.setObjectName("layoutWidget1")
@@ -1061,7 +1065,7 @@ class Ui_MainWindow(object):
         self.comboBox_plot_1.setCurrentIndex(0)
         self.comboBox_plot_2.setCurrentIndex(1)
         self.comboBox_plot_3.setCurrentIndex(2)
-        self.com_port_selected = 0
+        self.com_port_connected = 0
 
         # Signals:
         self.pushButton_enablemotor.clicked.connect(self.enable_motor)
@@ -1071,21 +1075,25 @@ class Ui_MainWindow(object):
         self.pushButton_readallstatus.clicked.connect(self.read_single_all_status_registers)
         self.pushButton_writesingleconfig.clicked.connect(self.write_single_register)
         self.lineEdit_targetangle.editingFinished.connect(self.place_angle_mark)
+        self.actionSettings.triggered.connect(self.open_comport_setting)
+
 
     # Function of getting real time
     def get_time(self):
-        self.currenttime = time.strftime("%H:%M:%S", time.localtime())
+        # self.currenttime = time.strftime("%H:%M:%S", time.localtime())
+        self.currenttime = QtCore.QTime.currentTime().toString("hh:mm:ss.zzz")
         return self.currenttime
 
     # Function of creatin comport connection with JCU
     def connect_device(self):
+
         # check if we have already selected this comport
-        if self.com_port_selected == 0:
+        if self.com_port_connected == 0:
             # check if chosen COM port available
             if check_com():
                 self.label_lamp_connected.setPixmap(QtGui.QPixmap("pictures/green_20x20.png"))
                 # connect to this COM port with MODBUS
-                self.com_port_selected = 1
+                self.com_port_connected = 1
                 open_com()
                 self.textEdit_log.append(f"- {self.get_time()}: Device 01 has been connected")
             else:
@@ -1101,6 +1109,7 @@ class Ui_MainWindow(object):
             self.slave_response = modbus_read_registers(modbus_function = 4, register_address = 30001, amount_of_read = 1)
             self.textEdit_log.append(f"- {self.get_time()}: Slave response: {hex(self.slave_response[0])}")
             self.lineEdit_errors.setText(f"{self.slave_response[0]}")
+            self.error_parcing(self.slave_response[0])
 
         elif self.radioButton_angle.isChecked():
             self.slave_response = modbus_read_registers(modbus_function = 4, register_address = 30002, amount_of_read = 1)
@@ -1156,6 +1165,7 @@ class Ui_MainWindow(object):
         else:
             self.slave_response = modbus_read_registers(modbus_function=4, register_address=30001, amount_of_read=5)
             self.lineEdit_errors.setText(str(self.slave_response[0]))
+            self.error_parcing(self.slave_response[0])
             self.lineEdit_angle.setText(str(self.slave_response[1]))
             self.lineEdit_speed.setText(str(self.slave_response[2]))
             self.lineEdit_torque.setText(str(self.slave_response[3]))
@@ -1164,6 +1174,61 @@ class Ui_MainWindow(object):
             self.lineEdit_drivertemp.setText(str(self.temp[0]))
             self.textEdit_log.append(f"- {self.get_time()}: Slave response: {hex(self.slave_response[0])} {hex(self.slave_response[1])} "
                                      f"{hex(self.slave_response[2])} {hex(self.slave_response[3])} {hex(self.slave_response[4])}")
+
+    def error_parcing(self, error_register):
+        # convert read register into binary string
+        error_register_bin = "{0:b}".format(error_register)
+        # fill all bits from left with zeroes, also reverse string, because indexing LSB
+        error_register_bin = error_register_bin.zfill(16)[::-1]
+        if error_register_bin[0] == '1':
+            self.label_error_mag.setPixmap(QtGui.QPixmap("pictures/red_20x20.png"))
+        else:
+            self.label_error_mag.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        if error_register_bin[1] == '1':
+            self.label_error_enc_par.setPixmap(QtGui.QPixmap("pictures/red_20x20.png"))
+        else:
+            self.label_error_enc_par.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        if error_register_bin[2] == '1':
+            self.label_error_enc_inc.setPixmap(QtGui.QPixmap("pictures/red_20x20.png"))
+        else:
+            self.label_error_enc_inc.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        if error_register_bin[3] == '1':
+            pass #TBD
+        else:
+            pass #TBD
+        if error_register_bin[4] == '1':
+            self.label_error_modbus_crc.setPixmap(QtGui.QPixmap("pictures/red_20x20.png"))
+        else:
+            self.label_error_modbus_crc.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        if error_register_bin[5] == '1':
+            self.label_error_modbus_ex_1.setPixmap(QtGui.QPixmap("pictures/red_20x20.png"))
+        else:
+            self.label_error_modbus_ex_1.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        if error_register_bin[6] == '1':
+            self.label_error_modbus_ex_2.setPixmap(QtGui.QPixmap("pictures/red_20x20.png"))
+        else:
+            self.label_error_modbus_ex_2.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        if error_register_bin[7] == '1':
+            pass # Modbus Illegal Data Value
+        else:
+            pass # Modbus Illegal Data Value
+        if error_register_bin[8] == '1':
+            pass # Modbus Slave device failure
+        else:
+            pass # Modbus Slave device failure
+        if error_register_bin[9] == '1':
+            self.label_error_overcurrent.setPixmap(QtGui.QPixmap("pictures/red_20x20.png"))
+        else:
+            self.label_error_overcurrent.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        if error_register_bin[10] == '1':
+            self.label_error_overtemp_motor.setPixmap(QtGui.QPixmap("pictures/red_20x20.png"))
+        else:
+            self.label_error_overtemp_motor.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        if error_register_bin[11] == '1':
+            self.label_error_overtemp_driver.setPixmap(QtGui.QPixmap("pictures/red_20x20.png"))
+        else:
+            self.label_error_overtemp_driver.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+
 
     # Writing information to JCU
     # Writing single registers
@@ -1174,8 +1239,11 @@ class Ui_MainWindow(object):
 
     # Enable motor
     def enable_motor(self):
-        modbus_enable_motor(self.slaveidspinBox.value())
-        self.label_lamp_motoron.setPixmap(QtGui.QPixmap("pictures/green_20x20.png"))
+        if self.com_port_connected:
+            modbus_enable_motor(self.slaveidspinBox.value())
+            self.label_lamp_motoron.setPixmap(QtGui.QPixmap("pictures/green_20x20.png"))
+        else:
+            pass
 
     # Process event of changing Dial
     def update_target_angle_lable(self):
@@ -1186,14 +1254,23 @@ class Ui_MainWindow(object):
 
     # cosmetic function to add angle mark at the end of the Target Angle's line
     def place_angle_mark(self):
-        # check if it was already added
-        self.last_char = self.lineEdit_targetangle.text()[-1]
-        # add, if not
-        if self.last_char != "°":
-            self.lineEdit_targetangle.setText(f"{self.lineEdit_targetangle.text()}°")
+        # check if line is not empty, to avoid crashing
+        if self.lineEdit_targetangle.text() != '':
+            # check if it was already added
+            self.last_char = self.lineEdit_targetangle.text()[-1]
+            # add, if not
+            if self.last_char != "°":
+                self.lineEdit_targetangle.setText(f"{self.lineEdit_targetangle.text()}°")
+            else:
+                pass
         else:
             pass
 
+    def open_comport_setting(self):
+        self.window = QtWidgets.QMainWindow()
+        self.ui = Ui_COMSettingWindow()
+        self.ui.setupUi(self.window)
+        self.window.show()
 
 if __name__ == "__main__":
     import sys
