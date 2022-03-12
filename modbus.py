@@ -1,13 +1,24 @@
 import minimalmodbus
+import serial
 from ctypes import *
 
 global instr
 
+def check_com():
+    try:
+        uart = serial.Serial(
+            port="COM4",
+            baudrate=3000000,
+        )
+        uart.close()
+        return True
+    except:
+        return False
 
 def open_com():
     global instr            # find out a better way of declaring variables
     try:
-        instr = minimalmodbus.Instrument(port="COM5", slaveaddress=1)
+        instr = minimalmodbus.Instrument(port="COM4", slaveaddress=1)
     except:
         print("Uffff")
 
@@ -15,7 +26,7 @@ def open_com():
     instr.debug = True
     # instr.serial.port                      # this is the serial port name
     instr.serial.baudrate = 3000000
-    instr.serial.timeout = 0.100
+    instr.serial.timeout = 0.020
 
 
 def modbus_enable_motor(slave_id: int):
