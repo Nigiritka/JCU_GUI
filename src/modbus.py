@@ -3,8 +3,6 @@ import serial
 
 from ctypes import *
 
-
-
 global instr
 
 

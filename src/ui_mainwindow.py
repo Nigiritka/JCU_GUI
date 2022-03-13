@@ -279,13 +279,13 @@ class Ui_MainWindow:
         self.label_lamp_connected = QtWidgets.QLabel(self.centralwidget)
         self.label_lamp_connected.setGeometry(QtCore.QRect(160, 41, 20, 20))
         self.label_lamp_connected.setText("")
-        self.label_lamp_connected.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        self.label_lamp_connected.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         self.label_lamp_connected.setAlignment(QtCore.Qt.AlignCenter)
         self.label_lamp_connected.setObjectName("label_lamp_connected")
         self.label_lamp_motoron = QtWidgets.QLabel(self.centralwidget)
         self.label_lamp_motoron.setGeometry(QtCore.QRect(160, 91, 20, 20))
         self.label_lamp_motoron.setText("")
-        self.label_lamp_motoron.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        self.label_lamp_motoron.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         self.label_lamp_motoron.setAlignment(QtCore.Qt.AlignCenter)
         self.label_lamp_motoron.setObjectName("label_lamp_motoron")
         self.pushButton_disablemotor = QtWidgets.QPushButton(self.centralwidget)
@@ -312,7 +312,7 @@ class Ui_MainWindow:
         self.label_lamp_motorrun = QtWidgets.QLabel(self.centralwidget)
         self.label_lamp_motorrun.setGeometry(QtCore.QRect(160, 151, 20, 20))
         self.label_lamp_motorrun.setText("")
-        self.label_lamp_motorrun.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        self.label_lamp_motorrun.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         self.label_lamp_motorrun.setAlignment(QtCore.Qt.AlignCenter)
         self.label_lamp_motorrun.setObjectName("label_lamp_motorrun")
         self.lable_icon_motorrun = QtWidgets.QLabel(self.centralwidget)
@@ -326,7 +326,7 @@ class Ui_MainWindow:
         self.label_lamp_brakeset = QtWidgets.QLabel(self.centralwidget)
         self.label_lamp_brakeset.setGeometry(QtCore.QRect(160, 211, 20, 20))
         self.label_lamp_brakeset.setText("")
-        self.label_lamp_brakeset.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        self.label_lamp_brakeset.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         self.label_lamp_brakeset.setAlignment(QtCore.Qt.AlignCenter)
         self.label_lamp_brakeset.setObjectName("label_lamp_brakeset")
         self.lable_icon_brakeset = QtWidgets.QLabel(self.centralwidget)
@@ -340,19 +340,19 @@ class Ui_MainWindow:
         self.label_error_mag = QtWidgets.QLabel(self.centralwidget)
         self.label_error_mag.setGeometry(QtCore.QRect(20, 721, 20, 20))
         self.label_error_mag.setText("")
-        self.label_error_mag.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        self.label_error_mag.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         self.label_error_mag.setAlignment(QtCore.Qt.AlignCenter)
         self.label_error_mag.setObjectName("label_error_mag")
         self.label_error_enc_par = QtWidgets.QLabel(self.centralwidget)
         self.label_error_enc_par.setGeometry(QtCore.QRect(20, 751, 20, 20))
         self.label_error_enc_par.setText("")
-        self.label_error_enc_par.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        self.label_error_enc_par.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         self.label_error_enc_par.setAlignment(QtCore.Qt.AlignCenter)
         self.label_error_enc_par.setObjectName("label_error_enc_par")
         self.label_lamp_reachedposition = QtWidgets.QLabel(self.centralwidget)
         self.label_lamp_reachedposition.setGeometry(QtCore.QRect(160, 181, 20, 20))
         self.label_lamp_reachedposition.setText("")
-        self.label_lamp_reachedposition.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        self.label_lamp_reachedposition.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         self.label_lamp_reachedposition.setAlignment(QtCore.Qt.AlignCenter)
         self.label_lamp_reachedposition.setObjectName("label_lamp_reachedposition")
         self.lable_icon_reachedposition = QtWidgets.QLabel(self.centralwidget)
@@ -376,7 +376,7 @@ class Ui_MainWindow:
         self.label_lamp_loggingenabled = QtWidgets.QLabel(self.centralwidget)
         self.label_lamp_loggingenabled.setGeometry(QtCore.QRect(160, 251, 20, 20))
         self.label_lamp_loggingenabled.setText("")
-        self.label_lamp_loggingenabled.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        self.label_lamp_loggingenabled.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         self.label_lamp_loggingenabled.setAlignment(QtCore.Qt.AlignCenter)
         self.label_lamp_loggingenabled.setObjectName("label_lamp_loggingenabled")
         self.lable_icon_loggingenabled = QtWidgets.QLabel(self.centralwidget)
@@ -395,7 +395,7 @@ class Ui_MainWindow:
         self.label_error_enc_inc = QtWidgets.QLabel(self.centralwidget)
         self.label_error_enc_inc.setGeometry(QtCore.QRect(20, 781, 20, 20))
         self.label_error_enc_inc.setText("")
-        self.label_error_enc_inc.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        self.label_error_enc_inc.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         self.label_error_enc_inc.setAlignment(QtCore.Qt.AlignCenter)
         self.label_error_enc_inc.setObjectName("label_error_enc_inc")
         self.lable_errors_3 = QtWidgets.QLabel(self.centralwidget)
@@ -425,19 +425,19 @@ class Ui_MainWindow:
         self.label_error_modbus_crc = QtWidgets.QLabel(self.centralwidget)
         self.label_error_modbus_crc.setGeometry(QtCore.QRect(260, 721, 20, 20))
         self.label_error_modbus_crc.setText("")
-        self.label_error_modbus_crc.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        self.label_error_modbus_crc.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         self.label_error_modbus_crc.setAlignment(QtCore.Qt.AlignCenter)
         self.label_error_modbus_crc.setObjectName("label_error_modbus_crc")
         self.label_error_modbus_ex_1 = QtWidgets.QLabel(self.centralwidget)
         self.label_error_modbus_ex_1.setGeometry(QtCore.QRect(260, 751, 20, 20))
         self.label_error_modbus_ex_1.setText("")
-        self.label_error_modbus_ex_1.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        self.label_error_modbus_ex_1.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         self.label_error_modbus_ex_1.setAlignment(QtCore.Qt.AlignCenter)
         self.label_error_modbus_ex_1.setObjectName("label_error_modbus_ex_1")
         self.label_error_modbus_ex_2 = QtWidgets.QLabel(self.centralwidget)
         self.label_error_modbus_ex_2.setGeometry(QtCore.QRect(260, 781, 20, 20))
         self.label_error_modbus_ex_2.setText("")
-        self.label_error_modbus_ex_2.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        self.label_error_modbus_ex_2.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         self.label_error_modbus_ex_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_error_modbus_ex_2.setObjectName("label_error_modbus_ex_2")
         self.lable_errors_6 = QtWidgets.QLabel(self.centralwidget)
@@ -475,7 +475,7 @@ class Ui_MainWindow:
         self.label_error_overtemp_motor = QtWidgets.QLabel(self.centralwidget)
         self.label_error_overtemp_motor.setGeometry(QtCore.QRect(500, 751, 20, 20))
         self.label_error_overtemp_motor.setText("")
-        self.label_error_overtemp_motor.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        self.label_error_overtemp_motor.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         self.label_error_overtemp_motor.setAlignment(QtCore.Qt.AlignCenter)
         self.label_error_overtemp_motor.setObjectName("label_error_overtemp_motor")
         self.lable_errors_10 = QtWidgets.QLabel(self.centralwidget)
@@ -489,7 +489,7 @@ class Ui_MainWindow:
         self.label_error_overtemp_driver = QtWidgets.QLabel(self.centralwidget)
         self.label_error_overtemp_driver.setGeometry(QtCore.QRect(500, 721, 20, 20))
         self.label_error_overtemp_driver.setText("")
-        self.label_error_overtemp_driver.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        self.label_error_overtemp_driver.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         self.label_error_overtemp_driver.setAlignment(QtCore.Qt.AlignCenter)
         self.label_error_overtemp_driver.setObjectName("label_error_overtemp_driver")
         self.lable_errors_11 = QtWidgets.QLabel(self.centralwidget)
@@ -503,7 +503,7 @@ class Ui_MainWindow:
         self.label_error_overcurrent = QtWidgets.QLabel(self.centralwidget)
         self.label_error_overcurrent.setGeometry(QtCore.QRect(500, 781, 20, 20))
         self.label_error_overcurrent.setText("")
-        self.label_error_overcurrent.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        self.label_error_overcurrent.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         self.label_error_overcurrent.setAlignment(QtCore.Qt.AlignCenter)
         self.label_error_overcurrent.setObjectName("label_label_error_overcurrent")
         self.layoutWidget1 = QtWidgets.QWidget(self.centralwidget)
@@ -772,19 +772,19 @@ class Ui_MainWindow:
         self.label_lamp_TBD_1 = QtWidgets.QLabel(self.centralwidget)
         self.label_lamp_TBD_1.setGeometry(QtCore.QRect(160, 281, 20, 20))
         self.label_lamp_TBD_1.setText("")
-        self.label_lamp_TBD_1.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        self.label_lamp_TBD_1.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         self.label_lamp_TBD_1.setAlignment(QtCore.Qt.AlignCenter)
         self.label_lamp_TBD_1.setObjectName("label_lamp_TBD_1")
         self.label_lamp_TBD_2 = QtWidgets.QLabel(self.centralwidget)
         self.label_lamp_TBD_2.setGeometry(QtCore.QRect(160, 311, 20, 20))
         self.label_lamp_TBD_2.setText("")
-        self.label_lamp_TBD_2.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        self.label_lamp_TBD_2.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         self.label_lamp_TBD_2.setAlignment(QtCore.Qt.AlignCenter)
         self.label_lamp_TBD_2.setObjectName("label_lamp_TBD_2")
         self.label_lamp_TBD_3 = QtWidgets.QLabel(self.centralwidget)
         self.label_lamp_TBD_3.setGeometry(QtCore.QRect(160, 341, 20, 20))
         self.label_lamp_TBD_3.setText("")
-        self.label_lamp_TBD_3.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+        self.label_lamp_TBD_3.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         self.label_lamp_TBD_3.setAlignment(QtCore.Qt.AlignCenter)
         self.label_lamp_TBD_3.setObjectName("label_lamp_TBD_3")
         self.lable_icon_TBD_1 = QtWidgets.QLabel(self.centralwidget)
@@ -1006,9 +1006,8 @@ class Ui_MainWindow:
 ##############################################################################################
 
         # user code begins here
-        self.x = np.linspace(0, 20, 100)
-        self.y = 3*np.sin(self.x) + 5
-        Plot(self.plot_widget_1, self.x, self.y)
+
+        self.my_plot = Plot(self.plot_widget_1)
 
         # default values:
         self.lineEdit_targetangle.setPlaceholderText("0°")
@@ -1040,14 +1039,16 @@ class Ui_MainWindow:
         if self.com_port_connected == 0:
             # check if chosen COM port available
             if check_com():
-                self.label_lamp_connected.setPixmap(QtGui.QPixmap("pictures/green_20x20.png"))
+                self.label_lamp_connected.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/green_20x20.png"))
                 # connect to this COM port with MODBUS
                 self.com_port_connected = 1
                 open_com()
                 self.textEdit_log.append(f"- {self.get_time()}: Device 01 has been connected")
             else:
                 # something wrong with COM port
-                self.label_lamp_connected.setPixmap(QtGui.QPixmap("pictures/red_20x20.png"))
+                self.label_lamp_connected.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/red_20x20.png"))
+
+        # self.my_plot.update_plot()
 
     def read_single_status_register(self):
         """
@@ -1131,33 +1132,33 @@ class Ui_MainWindow:
         # fill all bits from left with zeroes, also reverse string, because indexing LSB
         error_register_bin = error_register_bin.zfill(16)[::-1]
         if error_register_bin[0] == '1':
-            self.label_error_mag.setPixmap(QtGui.QPixmap("pictures/red_20x20.png"))
+            self.label_error_mag.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/red_20x20.png"))
         else:
-            self.label_error_mag.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+            self.label_error_mag.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         if error_register_bin[1] == '1':
-            self.label_error_enc_par.setPixmap(QtGui.QPixmap("pictures/red_20x20.png"))
+            self.label_error_enc_par.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/red_20x20.png"))
         else:
-            self.label_error_enc_par.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+            self.label_error_enc_par.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         if error_register_bin[2] == '1':
-            self.label_error_enc_inc.setPixmap(QtGui.QPixmap("pictures/red_20x20.png"))
+            self.label_error_enc_inc.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/red_20x20.png"))
         else:
-            self.label_error_enc_inc.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+            self.label_error_enc_inc.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         if error_register_bin[3] == '1':
             pass #TBD
         else:
             pass #TBD
         if error_register_bin[4] == '1':
-            self.label_error_modbus_crc.setPixmap(QtGui.QPixmap("pictures/red_20x20.png"))
+            self.label_error_modbus_crc.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/red_20x20.png"))
         else:
-            self.label_error_modbus_crc.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+            self.label_error_modbus_crc.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         if error_register_bin[5] == '1':
-            self.label_error_modbus_ex_1.setPixmap(QtGui.QPixmap("pictures/red_20x20.png"))
+            self.label_error_modbus_ex_1.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/red_20x20.png"))
         else:
-            self.label_error_modbus_ex_1.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+            self.label_error_modbus_ex_1.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         if error_register_bin[6] == '1':
-            self.label_error_modbus_ex_2.setPixmap(QtGui.QPixmap("pictures/red_20x20.png"))
+            self.label_error_modbus_ex_2.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/red_20x20.png"))
         else:
-            self.label_error_modbus_ex_2.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+            self.label_error_modbus_ex_2.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         if error_register_bin[7] == '1':
             pass # Modbus Illegal Data Value
         else:
@@ -1167,17 +1168,17 @@ class Ui_MainWindow:
         else:
             pass # Modbus Slave device failure
         if error_register_bin[9] == '1':
-            self.label_error_overcurrent.setPixmap(QtGui.QPixmap("pictures/red_20x20.png"))
+            self.label_error_overcurrent.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/red_20x20.png"))
         else:
-            self.label_error_overcurrent.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+            self.label_error_overcurrent.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         if error_register_bin[10] == '1':
-            self.label_error_overtemp_motor.setPixmap(QtGui.QPixmap("pictures/red_20x20.png"))
+            self.label_error_overtemp_motor.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/red_20x20.png"))
         else:
-            self.label_error_overtemp_motor.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+            self.label_error_overtemp_motor.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
         if error_register_bin[11] == '1':
-            self.label_error_overtemp_driver.setPixmap(QtGui.QPixmap("pictures/red_20x20.png"))
+            self.label_error_overtemp_driver.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/red_20x20.png"))
         else:
-            self.label_error_overtemp_driver.setPixmap(QtGui.QPixmap("pictures/grey_20x20.png"))
+            self.label_error_overtemp_driver.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/grey_20x20.png"))
 
 
     def write_single_register(self):
@@ -1193,7 +1194,7 @@ class Ui_MainWindow:
         """Enable motor"""
         if self.com_port_connected:
             modbus_enable_motor(self.slaveidspinBox.value())
-            self.label_lamp_motoron.setPixmap(QtGui.QPixmap("pictures/green_20x20.png"))
+            self.label_lamp_motoron.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/green_20x20.png"))
 
     def update_target_angle_lable(self):
         """Process event of changing Dial"""
@@ -1201,9 +1202,7 @@ class Ui_MainWindow:
         if self.checkBox_follow.checkState():
             modbus_update_target_angle(self.dial_angle.value()*4)
 
-        self.x = self.x + 1
-        self.y = 3*np.sin(self.x) + 5
-        Plot(self.plot_widget_1, self.x, self.y)
+        self.my_plot.update_plot()
 
     def place_angle_mark(self):
         """Cosmetic function to add angle mark at the end of the Target Angle's line"""
