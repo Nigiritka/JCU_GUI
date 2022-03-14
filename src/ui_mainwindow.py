@@ -2,12 +2,21 @@ import time
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtCore import QThread, pyqtSignal
 import numpy as np
 
 from modbus import *
 from COM_Setting_window import *
 from plot import Plot
 
+class MyThread(QThread):
+    change_value = pyqtSignal(int)
+    def run(self):
+        cnt = 0
+        while True:
+            cnt+=1
+            time.sleep(0.02)
+            self.change_value.emit(cnt)
 
 class Ui_MainWindow:
     def setupUi(self, MainWindow):
@@ -1021,11 +1030,15 @@ class Ui_MainWindow:
         self.pushButton_enablemotor.clicked.connect(self.enable_motor)
         self.dial_angle.valueChanged.connect(self.update_target_angle_lable)
         self.pushButton_connect.clicked.connect(self.connect_device)
+        # self.pushButton_connect.clicked.connect(self.start_thread)
+        self.pushButton_break.clicked.connect(self.start_thread)
         self.pushButton_readsinglestatus.clicked.connect(self.read_single_status_register)
         self.pushButton_readallstatus.clicked.connect(self.read_single_all_status_registers)
         self.pushButton_writesingleconfig.clicked.connect(self.write_single_register)
         self.lineEdit_targetangle.editingFinished.connect(self.place_angle_mark)
         self.actionSettings.triggered.connect(self.open_comport_setting)
+
+
 
     def get_time(self):
         """Function of getting real time"""
@@ -1092,10 +1105,18 @@ class Ui_MainWindow:
             # self.textEdit_log.append(f"- {self.get_time()}: Select register to read!")
             # self.textEdit_log.setTextColor(blackColor)
 
+    def start_thread(self):
+        self.thread = MyThread()
+        self.thread.change_value.connect(self.continuous_reading)
+        self.thread.start()
+
     # ADD THREAD HERE
-    def continuous_reading(self):
+    def continuous_reading(self, val):
         """Implementation of continiuos reading of data from JCU"""
-        while (self.checkBox.isChecked()):
+        self.lineEdit_kp_pos.setText(str(val))
+        if self.checkBox.isChecked():
+            self.pushButton_readsinglestatus.setEnabled(False)
+
             self.slave_response = modbus_read_registers(modbus_function=4, register_address=30001, amount_of_read=5)
             self.lineEdit_errors.setText(str(self.slave_response[0]))
             self.lineEdit_angle.setText(str(self.slave_response[1]))
@@ -1104,7 +1125,11 @@ class Ui_MainWindow:
             self.temp = divmod(self.slave_response[4], 0x100)
             self.lineEdit_motortemp.setText(str(self.temp[1]))
             self.lineEdit_drivertemp.setText(str(self.temp[0]))
-            time.sleep(0.003)
+            self.error_parcing(self.slave_response[0])
+        else:
+            self.pushButton_readsinglestatus.setEnabled(True)
+            self.thread.terminate()
+
 
     def read_single_all_status_registers(self):
         """
@@ -1112,7 +1137,7 @@ class Ui_MainWindow:
         * Reading of ALL registers
         """
         if self.checkBox.isChecked():
-            self.continuous_reading()
+            self.start_thread()
         else:
             self.slave_response = modbus_read_registers(modbus_function=4, register_address=30001, amount_of_read=5)
             self.lineEdit_errors.setText(str(self.slave_response[0]))
