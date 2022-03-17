@@ -3,11 +3,31 @@ import time
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QThread, pyqtSignal
+from pyqtgraph import PlotWidget
+import pyqtgraph as pg
 import numpy as np
-
 from modbus import *
 from COM_Setting_window import *
 from plot import Plot
+from PyQt5 import uic
+from random import randint
+
+
+class Plot_2(PlotWidget):
+    """ Class for creating the Plot """
+    def __init__(self, parent):
+        self.parent = parent
+
+        x = np.arange(1000)
+        y = np.random.normal(size=(3, 1000))
+        self.plotWidget = pg.plot(title="Three plot curves")
+        for i in range(3):
+            self.plotWidget.plot(x, y[i], pen=(i, 3))  ## setting pen=(i,3) automaticaly creates three different-colored pens
+
+        super().__init__(self.plotWidget)
+        self.setParent(self.parent)
+
+
 
 class MyThread(QThread):
     change_value = pyqtSignal(int)
@@ -15,7 +35,16 @@ class MyThread(QThread):
         cnt = 0
         while True:
             cnt+=1
-            time.sleep(0.02)
+            time.sleep(0.03)
+            self.change_value.emit(cnt)
+
+class MyThread_slow(QThread):
+    change_value = pyqtSignal(int)
+    def run(self):
+        cnt = 0
+        while True:
+            cnt+=1
+            time.sleep(1)
             self.change_value.emit(cnt)
 
 class Ui_MainWindow:
@@ -157,13 +186,13 @@ class Ui_MainWindow:
         self.plot_widget_1 = QtWidgets.QWidget(self.centralwidget)
         self.plot_widget_1.setGeometry(QtCore.QRect(730, 20, 561, 221))
         self.plot_widget_1.setObjectName("plot_widget_1")
-        self.plot_widget_2 = QtWidgets.QWidget(self.centralwidget)
-        self.plot_widget_2.setEnabled(False)
-        self.plot_widget_2.setGeometry(QtCore.QRect(730, 260, 561, 221))
+        self.plot_widget_2 = PlotWidget(self.centralwidget)
+        self.plot_widget_2.setGeometry(QtCore.QRect(740, 260, 541, 221))
         self.plot_widget_2.setObjectName("plot_widget_2")
         self.plot_widget_3 = QtWidgets.QWidget(self.centralwidget)
         self.plot_widget_3.setGeometry(QtCore.QRect(730, 500, 561, 221))
         self.plot_widget_3.setObjectName("plot_widget_3")
+
         self.layoutWidget = QtWidgets.QWidget(self.centralwidget)
         self.layoutWidget.setGeometry(QtCore.QRect(361, 41, 211, 152))
         self.layoutWidget.setObjectName("layoutWidget")
@@ -1017,6 +1046,7 @@ class Ui_MainWindow:
         # user code begins here
 
         self.my_plot = Plot(self.plot_widget_1)
+        # self.my_plot = Plot_2(self.plot_widget_2)
 
         # default values:
         self.lineEdit_targetangle.setPlaceholderText("0°")
@@ -1031,7 +1061,7 @@ class Ui_MainWindow:
         self.dial_angle.valueChanged.connect(self.update_target_angle_lable)
         self.pushButton_connect.clicked.connect(self.connect_device)
         # self.pushButton_connect.clicked.connect(self.start_thread)
-        self.pushButton_break.clicked.connect(self.start_thread)
+        self.pushButton_break.clicked.connect(self.start_cont_read_thread)
         self.pushButton_readsinglestatus.clicked.connect(self.read_single_status_register)
         self.pushButton_readallstatus.clicked.connect(self.read_single_all_status_registers)
         self.pushButton_writesingleconfig.clicked.connect(self.write_single_register)
@@ -1039,6 +1069,44 @@ class Ui_MainWindow:
         self.actionSettings.triggered.connect(self.open_comport_setting)
 
 
+        # hour = [1,2,3,4,5,6,7,8,9,10]
+        # temperature = [30,32,34,32,33,31,29,32,35,45]
+        #
+        # self.plot_widget_2.setBackground('#F0F0F0')
+        # self.plot_widget_2.plot(hour, temperature)
+        # styles = {'color': 'r', 'font-size': '12px'}
+        # self.plot_widget_2.setLabel('left', 'Temperature (°C)', **styles)
+        # self.plot_widget_2.setLabel('bottom', 'Hour (H)', **styles)
+        # self.plot_widget_2.showGrid(x=1, y=1)
+
+
+        self.x = list(range(100))  # 100 time points
+        self.y = [randint(0,100) for _ in range(100)]  # 100 data points
+
+        self.plot_widget_2.setBackground('w')
+        self.plot_widget_2.showGrid(x=1, y=1)
+        pen = pg.mkPen(color="#03dfd5", width=2)
+        self.data_line =  self.plot_widget_2.plot(self.x, self.y, pen=pen)
+        # self.plot_widget_2.setXRange(5, 20, padding=0)
+        self.plot_widget_2.setYRange(-5, 365, padding=0)
+        styles = {'color': 'r', 'font-size': '12px'}
+        self.plot_widget_2.setLabel('left', 'Temperature (°C)', **styles)
+        self.plot_widget_2.setLabel('bottom', 'Hour (H)', **styles)
+        self.plot_widget_2.setBackground('#F0F0F0')
+        self.plot_widget_2.getAxis('left').setPen('black')
+        self.plot_widget_2.getAxis('left').setTextPen('black')
+        self.plot_widget_2.getAxis('bottom').setPen('black')
+        self.plot_widget_2.getAxis('bottom').setTextPen('black')
+
+    def update_plot_data(self):
+        # self.plot_widget_2.setYRange(-5, 365, padding=0)
+        self.x = self.x[1:]  # Remove the first y element.
+        self.x.append(self.x[-1] + 1)  # Add a new value 1 higher than the last.
+
+        self.y = self.y[1:]  # Remove the first
+        self.y.append(self.dial_angle.value()/4096*360)  # Add a new random value.
+
+        self.data_line.setData(self.x, self.y)  # Update the data.
 
     def get_time(self):
         """Function of getting real time"""
@@ -1105,10 +1173,19 @@ class Ui_MainWindow:
             # self.textEdit_log.append(f"- {self.get_time()}: Select register to read!")
             # self.textEdit_log.setTextColor(blackColor)
 
-    def start_thread(self):
+    def start_cont_read_thread(self):
         self.thread = MyThread()
         self.thread.change_value.connect(self.continuous_reading)
         self.thread.start()
+
+    def start_plot_thread(self):
+        self.thread_2 = MyThread_slow()
+        self.thread_2.change_value.connect(self.test)
+        self.thread_2.start()
+
+    def test(self, val):
+        self.lineEdit_kp_current.setText(str(val))
+        self.my_plot.update_plot()
 
     # ADD THREAD HERE
     def continuous_reading(self, val):
@@ -1129,6 +1206,7 @@ class Ui_MainWindow:
         else:
             self.pushButton_readsinglestatus.setEnabled(True)
             self.thread.terminate()
+            self.thread_2.terminate()
 
 
     def read_single_all_status_registers(self):
@@ -1137,7 +1215,8 @@ class Ui_MainWindow:
         * Reading of ALL registers
         """
         if self.checkBox.isChecked():
-            self.start_thread()
+            self.start_cont_read_thread()
+            self.start_plot_thread()
         else:
             self.slave_response = modbus_read_registers(modbus_function=4, register_address=30001, amount_of_read=5)
             self.lineEdit_errors.setText(str(self.slave_response[0]))
@@ -1223,11 +1302,12 @@ class Ui_MainWindow:
 
     def update_target_angle_lable(self):
         """Process event of changing Dial"""
+        self.update_plot_data()
         self.lineEdit_targetangle.setText(f"{self.dial_angle.value()/4096*360:.1f}°")
         if self.checkBox_follow.checkState():
             modbus_update_target_angle(self.dial_angle.value()*4)
 
-        self.my_plot.update_plot()
+        # self.my_plot.update_plot()
 
     def place_angle_mark(self):
         """Cosmetic function to add angle mark at the end of the Target Angle's line"""
