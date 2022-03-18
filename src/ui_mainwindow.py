@@ -35,17 +35,9 @@ class MyThread(QThread):
         cnt = 0
         while True:
             cnt+=1
-            time.sleep(0.03)
+            time.sleep(0.02)
             self.change_value.emit(cnt)
 
-class MyThread_slow(QThread):
-    change_value = pyqtSignal(int)
-    def run(self):
-        cnt = 0
-        while True:
-            cnt+=1
-            time.sleep(1)
-            self.change_value.emit(cnt)
 
 class Ui_MainWindow:
     def setupUi(self, MainWindow):
@@ -98,7 +90,7 @@ class Ui_MainWindow:
         self.pushButton_readallstatus.setGeometry(QtCore.QRect(590, 170, 121, 21))
         self.pushButton_readallstatus.setObjectName("pushButton_readallstatus")
         self.textEdit_log = QtWidgets.QTextEdit(self.centralwidget)
-        self.textEdit_log.setGeometry(QtCore.QRect(20, 420, 291, 241))
+        self.textEdit_log.setGeometry(QtCore.QRect(10, 420, 301, 241))
         self.textEdit_log.setObjectName("textEdit_log")
         self.jcuinputreglable = QtWidgets.QLabel(self.centralwidget)
         self.jcuinputreglable.setEnabled(True)
@@ -183,14 +175,14 @@ class Ui_MainWindow:
         self.pushButton_stop = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_stop.setGeometry(QtCore.QRect(20, 180, 121, 21))
         self.pushButton_stop.setObjectName("pushButton_stop")
-        self.plot_widget_1 = QtWidgets.QWidget(self.centralwidget)
+        self.plot_widget_1 = PlotWidget(self.centralwidget)
         self.plot_widget_1.setGeometry(QtCore.QRect(730, 20, 561, 221))
         self.plot_widget_1.setObjectName("plot_widget_1")
         self.plot_widget_2 = PlotWidget(self.centralwidget)
         self.plot_widget_2.setGeometry(QtCore.QRect(740, 260, 541, 221))
         self.plot_widget_2.setObjectName("plot_widget_2")
-        self.plot_widget_3 = QtWidgets.QWidget(self.centralwidget)
-        self.plot_widget_3.setGeometry(QtCore.QRect(730, 500, 561, 221))
+        self.plot_widget_3 = PlotWidget(self.centralwidget)
+        self.plot_widget_3.setGeometry(QtCore.QRect(740, 500, 541, 221))
         self.plot_widget_3.setObjectName("plot_widget_3")
 
         self.layoutWidget = QtWidgets.QWidget(self.centralwidget)
@@ -1045,7 +1037,7 @@ class Ui_MainWindow:
 
         # user code begins here
 
-        self.my_plot = Plot(self.plot_widget_1)
+        # self.my_plot = Plot(self.plot_widget_1)
         # self.my_plot = Plot_2(self.plot_widget_2)
 
         # default values:
@@ -1055,6 +1047,8 @@ class Ui_MainWindow:
         self.comboBox_plot_2.setCurrentIndex(1)
         self.comboBox_plot_3.setCurrentIndex(2)
         self.com_port_connected = 0
+        self.angle = 0
+        self.textEdit_log.setReadOnly(True)
 
         # Signals:
         self.pushButton_enablemotor.clicked.connect(self.enable_motor)
@@ -1067,46 +1061,84 @@ class Ui_MainWindow:
         self.pushButton_writesingleconfig.clicked.connect(self.write_single_register)
         self.lineEdit_targetangle.editingFinished.connect(self.place_angle_mark)
         self.actionSettings.triggered.connect(self.open_comport_setting)
+        self.pushButton_stopplots.clicked.connect(self.stop_thread)
 
+        # Plot setting
+        self.x_range = 200
+        self.x = list(range(self.x_range))
+        self.y = [0 for _ in range(self.x_range)]
+        self.z = [randint(0, 3500) for _ in range(self.x_range)]
+        self.a = [randint(0, 100) for _ in range(self.x_range)]
+        pen = pg.mkPen(color="#03dfd5", width=2)
+        pen_1 = pg.mkPen(color="#FF0000", width=2)
 
-        # hour = [1,2,3,4,5,6,7,8,9,10]
-        # temperature = [30,32,34,32,33,31,29,32,35,45]
-        #
-        # self.plot_widget_2.setBackground('#F0F0F0')
-        # self.plot_widget_2.plot(hour, temperature)
-        # styles = {'color': 'r', 'font-size': '12px'}
-        # self.plot_widget_2.setLabel('left', 'Temperature (°C)', **styles)
-        # self.plot_widget_2.setLabel('bottom', 'Hour (H)', **styles)
-        # self.plot_widget_2.showGrid(x=1, y=1)
+        self.data_line_2 =  self.plot_widget_2.plot(self.x, self.y, pen=pen)
+        self.data_line_2_2 = self.plot_widget_2.plot(self.x, self.a, pen=pen_1)
+        self.data_line_3 = self.plot_widget_3.plot(self.x, self.z, pen=pen)
+        styles = {'color': 'r', 'font-size': '12px'}
 
+        # Plot 1
+        self.plot_widget_1.setBackground('w')
+        self.plot_widget_1.showGrid(x=1, y=1)
+        self.plot_widget_1.setXRange(0, self.x_range, padding=0)
+        self.plot_widget_1.setYRange(-5, 105, padding=0)
+        self.plot_widget_1.setLabel('left', 'Speed, Rad/s', **styles)
+        self.plot_widget_1.setLabel('bottom', 'Time, s', **styles)
+        self.plot_widget_1.setBackground('#F0F0F0')
+        self.plot_widget_1.getAxis('left').setPen('black')
+        self.plot_widget_1.getAxis('left').setTextPen('black')
+        self.plot_widget_1.getAxis('bottom').setPen('black')
+        self.plot_widget_1.getAxis('bottom').setTextPen('black')
 
-        self.x = list(range(100))  # 100 time points
-        self.y = [randint(0,100) for _ in range(100)]  # 100 data points
-
+        # Plot 2
         self.plot_widget_2.setBackground('w')
         self.plot_widget_2.showGrid(x=1, y=1)
-        pen = pg.mkPen(color="#03dfd5", width=2)
-        self.data_line =  self.plot_widget_2.plot(self.x, self.y, pen=pen)
-        # self.plot_widget_2.setXRange(5, 20, padding=0)
+        self.plot_widget_2.setXRange(0, self.x_range, padding=0)
         self.plot_widget_2.setYRange(-5, 365, padding=0)
-        styles = {'color': 'r', 'font-size': '12px'}
-        self.plot_widget_2.setLabel('left', 'Temperature (°C)', **styles)
-        self.plot_widget_2.setLabel('bottom', 'Hour (H)', **styles)
+        self.plot_widget_2.setLabel('left', 'Angle, deg', **styles)
+        self.plot_widget_2.setLabel('bottom', 'Time, s', **styles)
         self.plot_widget_2.setBackground('#F0F0F0')
         self.plot_widget_2.getAxis('left').setPen('black')
         self.plot_widget_2.getAxis('left').setTextPen('black')
         self.plot_widget_2.getAxis('bottom').setPen('black')
         self.plot_widget_2.getAxis('bottom').setTextPen('black')
 
+        # Plot 2
+        self.plot_widget_3.setBackground('w')
+        self.plot_widget_3.showGrid(x=1, y=1)
+        self.plot_widget_3.setXRange(0, self.x_range, padding=0)
+        self.plot_widget_3.setYRange(-5, 3650, padding=0)
+        self.plot_widget_3.setLabel('left', 'Temperature, C°', **styles)
+        self.plot_widget_3.setLabel('bottom', 'Time, s', **styles)
+        self.plot_widget_3.setBackground('#F0F0F0')
+        self.plot_widget_3.getAxis('left').setPen('black')
+        self.plot_widget_3.getAxis('left').setTextPen('black')
+        self.plot_widget_3.getAxis('bottom').setPen('black')
+        self.plot_widget_3.getAxis('bottom').setTextPen('black')
+
+
+
     def update_plot_data(self):
+        self.plot_widget_1.setYRange(-5, 105, padding=0)
+        self.plot_widget_2.setYRange(-5, 365, padding=0)
+        self.plot_widget_3.setYRange(-5, 3650, padding=0)
+        # self.x = self.x[1:]  # Remove the first y element.
+        # self.x.append(self.x[-1] + 1)  # Add a new value 1 higher than the last.
         # self.plot_widget_2.setYRange(-5, 365, padding=0)
-        self.x = self.x[1:]  # Remove the first y element.
-        self.x.append(self.x[-1] + 1)  # Add a new value 1 higher than the last.
-
+        # self.plot_widget_2.setXRange(self.x[0], self.x[99], padding=0)
         self.y = self.y[1:]  # Remove the first
-        self.y.append(self.dial_angle.value()/4096*360)  # Add a new random value.
+        self.y.append(self.angle/16384*360)  # Add a new random value.
 
-        self.data_line.setData(self.x, self.y)  # Update the data.
+        self.z = self.z[1:]  # Remove the first
+        self.z.append(randint(0, 3500))
+
+        self.a = self.a[1:]  # Remove the first
+        self.a.append(randint(0, 100))
+
+
+        self.data_line_2.setData(self.x, self.y[-self.x_range:])  # Update the data.
+        self.data_line_2_2.setData(self.x, self.a[-self.x_range:])
+        self.data_line_3.setData(self.x, self.z[-self.x_range:])  # Update the data.
 
     def get_time(self):
         """Function of getting real time"""
@@ -1178,14 +1210,10 @@ class Ui_MainWindow:
         self.thread.change_value.connect(self.continuous_reading)
         self.thread.start()
 
-    def start_plot_thread(self):
-        self.thread_2 = MyThread_slow()
-        self.thread_2.change_value.connect(self.test)
-        self.thread_2.start()
-
-    def test(self, val):
-        self.lineEdit_kp_current.setText(str(val))
-        self.my_plot.update_plot()
+    def stop_thread(self):
+        self.pushButton_readsinglestatus.setEnabled(True)
+        self.checkBox.setChecked(False)
+        self.thread.terminate()
 
     # ADD THREAD HERE
     def continuous_reading(self, val):
@@ -1202,11 +1230,19 @@ class Ui_MainWindow:
             self.temp = divmod(self.slave_response[4], 0x100)
             self.lineEdit_motortemp.setText(str(self.temp[1]))
             self.lineEdit_drivertemp.setText(str(self.temp[0]))
+            self.torque = self.slave_response[3]
+            self.motortemperature = self.temp[1]
+            self.drivertemperature = self.temp[0]
+            self.angle = self.slave_response[1]
             self.error_parcing(self.slave_response[0])
+            self.textEdit_log.append(
+                f"- {self.get_time()}: Slave response: {hex(self.slave_response[0])} {hex(self.slave_response[1])} "
+                f"{hex(self.slave_response[2])} {hex(self.slave_response[3])} {hex(self.slave_response[4])}")
+            self.update_plot_data()
         else:
-            self.pushButton_readsinglestatus.setEnabled(True)
-            self.thread.terminate()
-            self.thread_2.terminate()
+            pass
+
+
 
 
     def read_single_all_status_registers(self):
@@ -1216,7 +1252,6 @@ class Ui_MainWindow:
         """
         if self.checkBox.isChecked():
             self.start_cont_read_thread()
-            self.start_plot_thread()
         else:
             self.slave_response = modbus_read_registers(modbus_function=4, register_address=30001, amount_of_read=5)
             self.lineEdit_errors.setText(str(self.slave_response[0]))
@@ -1302,7 +1337,6 @@ class Ui_MainWindow:
 
     def update_target_angle_lable(self):
         """Process event of changing Dial"""
-        self.update_plot_data()
         self.lineEdit_targetangle.setText(f"{self.dial_angle.value()/4096*360:.1f}°")
         if self.checkBox_follow.checkState():
             modbus_update_target_angle(self.dial_angle.value()*4)

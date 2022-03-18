@@ -25,7 +25,7 @@ def open_com():
         print("Uffff")
 
 
-    instr.debug = True
+    # instr.debug = True
     # instr.serial.port                      # this is the serial port name
     instr.serial.baudrate = 3000000
     instr.serial.timeout = 0.020
