@@ -352,7 +352,7 @@ p, li { white-space: pre-wrap; }
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QCheckBox" name="checkBox">
+   <widget class="QCheckBox" name="checkBox_cont_read">
     <property name="geometry">
      <rect>
       <x>590</x>
@@ -420,9 +420,9 @@ p, li { white-space: pre-wrap; }
    <widget class="QWidget" name="plot_widget_1" native="true">
     <property name="geometry">
      <rect>
-      <x>730</x>
+      <x>740</x>
       <y>20</y>
-      <width>561</width>
+      <width>541</width>
       <height>221</height>
      </rect>
     </property>
@@ -433,9 +433,9 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="geometry">
      <rect>
-      <x>730</x>
+      <x>750</x>
       <y>260</y>
-      <width>561</width>
+      <width>531</width>
       <height>221</height>
      </rect>
     </property>
@@ -2024,6 +2024,11 @@ p, li { white-space: pre-wrap; }
       <string>Temperature</string>
      </property>
     </item>
+    <item>
+     <property name="text">
+      <string>None</string>
+     </property>
+    </item>
    </widget>
    <widget class="QComboBox" name="comboBox_plot_2">
     <property name="geometry">
@@ -2054,6 +2059,11 @@ p, li { white-space: pre-wrap; }
       <string>Temperature</string>
      </property>
     </item>
+    <item>
+     <property name="text">
+      <string>None</string>
+     </property>
+    </item>
    </widget>
    <widget class="QComboBox" name="comboBox_plot_3">
     <property name="geometry">
@@ -2082,6 +2092,11 @@ p, li { white-space: pre-wrap; }
     <item>
      <property name="text">
       <string>Temperature</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>None</string>
      </property>
     </item>
    </widget>
@@ -2170,12 +2185,15 @@ p, li { white-space: pre-wrap; }
      <string>Stop Plots</string>
     </property>
    </widget>
-   <widget class="PlotWidget" name="graphicsView">
+   <widget class="QWidget" name="plot_widget_3" native="true">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>730</x>
+      <x>750</x>
       <y>500</y>
-      <width>561</width>
+      <width>531</width>
       <height>221</height>
      </rect>
     </property>
@@ -2263,13 +2281,6 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>PlotWidget</class>
-   <extends>QGraphicsView</extends>
-   <header>pyqtgrach</header>
-  </customwidget>
- </customwidgets>
  <tabstops>
   <tabstop>slaveidspinBox</tabstop>
  </tabstops>

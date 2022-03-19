@@ -176,7 +176,7 @@ class Ui_MainWindow:
         self.pushButton_stop.setGeometry(QtCore.QRect(20, 180, 121, 21))
         self.pushButton_stop.setObjectName("pushButton_stop")
         self.plot_widget_1 = PlotWidget(self.centralwidget)
-        self.plot_widget_1.setGeometry(QtCore.QRect(730, 20, 561, 221))
+        self.plot_widget_1.setGeometry(QtCore.QRect(740, 20, 541, 221))
         self.plot_widget_1.setObjectName("plot_widget_1")
         self.plot_widget_2 = PlotWidget(self.centralwidget)
         self.plot_widget_2.setGeometry(QtCore.QRect(740, 260, 541, 221))
@@ -1043,11 +1043,12 @@ class Ui_MainWindow:
         # default values:
         self.lineEdit_targetangle.setPlaceholderText("0°")
         self.textEdit_log.setPlaceholderText("Log...")
-        self.comboBox_plot_1.setCurrentIndex(0)
-        self.comboBox_plot_2.setCurrentIndex(1)
-        self.comboBox_plot_3.setCurrentIndex(2)
+        self.comboBox_plot_1.setCurrentIndex(1)
+        self.comboBox_plot_2.setCurrentIndex(0)
+        self.comboBox_plot_3.setCurrentIndex(3)
         self.com_port_connected = 0
         self.angle = 0
+        self.target_angle = 0
         self.textEdit_log.setReadOnly(True)
 
         # Signals:
@@ -1067,22 +1068,27 @@ class Ui_MainWindow:
         self.x_range = 200
         self.x = list(range(self.x_range))
         self.y = [0 for _ in range(self.x_range)]
-        self.z = [randint(0, 3500) for _ in range(self.x_range)]
-        self.a = [randint(0, 100) for _ in range(self.x_range)]
-        pen = pg.mkPen(color="#03dfd5", width=2)
-        pen_1 = pg.mkPen(color="#FF0000", width=2)
+        self.z = [randint(0, 100) for _ in range(self.x_range)]
+        self.a = [0 for _ in range(self.x_range)]
+        self.b = [0 for _ in range(self.x_range)]
 
-        self.data_line_2 =  self.plot_widget_2.plot(self.x, self.y, pen=pen)
-        self.data_line_2_2 = self.plot_widget_2.plot(self.x, self.a, pen=pen_1)
-        self.data_line_3 = self.plot_widget_3.plot(self.x, self.z, pen=pen)
+        pen_1 = pg.mkPen(color="#32CD32", width=2)
+        pen_2 = pg.mkPen(color="#FF8C00", width=2)
+        pen_3 = pg.mkPen(color="#FF1493", width=2)
+        pen_4 = pg.mkPen(color="#03dfd5", width=2)
+        self.speed_data_line = self.plot_widget_1.plot(self.x, self.b, pen=pen_3)
+        self.angle_data_line =  self.plot_widget_2.plot(self.x, self.y, pen=pen_4)
+        self.target_angle_data_line = self.plot_widget_2.plot(self.x, self.a, pen=pen_1)
+        self.temperature_data_line = self.plot_widget_3.plot(self.x, self.z, pen=pen_2)
+        self.plot_widget_2.addLegend()
         styles = {'color': 'r', 'font-size': '12px'}
 
         # Plot 1
         self.plot_widget_1.setBackground('w')
         self.plot_widget_1.showGrid(x=1, y=1)
         self.plot_widget_1.setXRange(0, self.x_range, padding=0)
-        self.plot_widget_1.setYRange(-5, 105, padding=0)
-        self.plot_widget_1.setLabel('left', 'Speed, Rad/s', **styles)
+        self.plot_widget_1.setYRange(-100, 100, padding=0)
+        self.plot_widget_1.setLabel('left', 'Speed, deg/s', **styles)
         self.plot_widget_1.setLabel('bottom', 'Time, s', **styles)
         self.plot_widget_1.setBackground('#F0F0F0')
         self.plot_widget_1.getAxis('left').setPen('black')
@@ -1103,11 +1109,12 @@ class Ui_MainWindow:
         self.plot_widget_2.getAxis('bottom').setPen('black')
         self.plot_widget_2.getAxis('bottom').setTextPen('black')
 
+
         # Plot 2
         self.plot_widget_3.setBackground('w')
         self.plot_widget_3.showGrid(x=1, y=1)
         self.plot_widget_3.setXRange(0, self.x_range, padding=0)
-        self.plot_widget_3.setYRange(-5, 3650, padding=0)
+        self.plot_widget_3.setYRange(-5, 105, padding=0)
         self.plot_widget_3.setLabel('left', 'Temperature, C°', **styles)
         self.plot_widget_3.setLabel('bottom', 'Time, s', **styles)
         self.plot_widget_3.setBackground('#F0F0F0')
@@ -1119,9 +1126,9 @@ class Ui_MainWindow:
 
 
     def update_plot_data(self):
-        self.plot_widget_1.setYRange(-5, 105, padding=0)
+        self.plot_widget_1.setYRange(-100, 100, padding=0)
         self.plot_widget_2.setYRange(-5, 365, padding=0)
-        self.plot_widget_3.setYRange(-5, 3650, padding=0)
+        self.plot_widget_3.setYRange(-5, 105, padding=0)
         # self.x = self.x[1:]  # Remove the first y element.
         # self.x.append(self.x[-1] + 1)  # Add a new value 1 higher than the last.
         # self.plot_widget_2.setYRange(-5, 365, padding=0)
@@ -1130,15 +1137,19 @@ class Ui_MainWindow:
         self.y.append(self.angle/16384*360)  # Add a new random value.
 
         self.z = self.z[1:]  # Remove the first
-        self.z.append(randint(0, 3500))
+        self.z.append(randint(0, 100))
 
         self.a = self.a[1:]  # Remove the first
-        self.a.append(randint(0, 100))
+        self.a.append(self.target_angle/16384*360)
 
+        self.b = self.b[1:]  # Remove the first
+        self.b.append(self.speed)
 
-        self.data_line_2.setData(self.x, self.y[-self.x_range:])  # Update the data.
-        self.data_line_2_2.setData(self.x, self.a[-self.x_range:])
-        self.data_line_3.setData(self.x, self.z[-self.x_range:])  # Update the data.
+        # Update plots
+        self.speed_data_line.setData(self.x, self.b[-self.x_range:])
+        self.angle_data_line.setData(self.x, self.y[-self.x_range:])
+        self.target_angle_data_line.setData(self.x, self.a[-self.x_range:])
+        self.temperature_data_line.setData(self.x, self.z[-self.x_range:])
 
     def get_time(self):
         """Function of getting real time"""
@@ -1182,7 +1193,7 @@ class Ui_MainWindow:
         elif self.radioButton_speed.isChecked():
             self.slave_response = modbus_read_registers(modbus_function = 4, register_address = 30003, amount_of_read = 1)
             self.textEdit_log.append(f"- {self.get_time()}: Slave response: {hex(self.slave_response[0])}")
-            self.lineEdit_speed.setText(f"{self.slave_response[0]}")
+            self.lineEdit_speed.setText(f"{np.int16(self.slave_response[0])}")
 
         elif self.radioButton_torque.isChecked():
             self.slave_response = modbus_read_registers(modbus_function = 4, register_address = 30004, amount_of_read = 1)
@@ -1212,6 +1223,7 @@ class Ui_MainWindow:
 
     def stop_thread(self):
         self.pushButton_readsinglestatus.setEnabled(True)
+        self.pushButton_readallstatus.setEnabled(True)
         self.checkBox.setChecked(False)
         self.thread.terminate()
 
@@ -1221,26 +1233,31 @@ class Ui_MainWindow:
         self.lineEdit_kp_pos.setText(str(val))
         if self.checkBox.isChecked():
             self.pushButton_readsinglestatus.setEnabled(False)
-
+            self.pushButton_readallstatus.setEnabled(False)
             self.slave_response = modbus_read_registers(modbus_function=4, register_address=30001, amount_of_read=5)
             self.lineEdit_errors.setText(str(self.slave_response[0]))
             self.lineEdit_angle.setText(str(self.slave_response[1]))
-            self.lineEdit_speed.setText(str(self.slave_response[2]))
+            self.lineEdit_speed.setText(str(np.int16(self.slave_response[2])))
             self.lineEdit_torque.setText(str(self.slave_response[3]))
             self.temp = divmod(self.slave_response[4], 0x100)
             self.lineEdit_motortemp.setText(str(self.temp[1]))
             self.lineEdit_drivertemp.setText(str(self.temp[0]))
+
+            self.angle = self.slave_response[1]
+            self.speed = np.int16(self.slave_response[2])*11
             self.torque = self.slave_response[3]
             self.motortemperature = self.temp[1]
             self.drivertemperature = self.temp[0]
-            self.angle = self.slave_response[1]
+
             self.error_parcing(self.slave_response[0])
             self.textEdit_log.append(
                 f"- {self.get_time()}: Slave response: {hex(self.slave_response[0])} {hex(self.slave_response[1])} "
                 f"{hex(self.slave_response[2])} {hex(self.slave_response[3])} {hex(self.slave_response[4])}")
             self.update_plot_data()
         else:
-            pass
+            self.pushButton_readsinglestatus.setEnabled(True)
+            self.pushButton_readallstatus.setEnabled(True)
+            self.thread.terminate()
 
 
 
@@ -1257,13 +1274,14 @@ class Ui_MainWindow:
             self.lineEdit_errors.setText(str(self.slave_response[0]))
             self.error_parcing(self.slave_response[0])
             self.lineEdit_angle.setText(str(self.slave_response[1]))
-            self.lineEdit_speed.setText(str(self.slave_response[2]))
+            self.lineEdit_speed.setText(str(np.int16(self.slave_response[2])))
             self.lineEdit_torque.setText(str(self.slave_response[3]))
             self.temp = divmod(self.slave_response[4], 0x100)
             self.lineEdit_motortemp.setText(str(self.temp[1]))
             self.lineEdit_drivertemp.setText(str(self.temp[0]))
             self.textEdit_log.append(f"- {self.get_time()}: Slave response: {hex(self.slave_response[0])} {hex(self.slave_response[1])} "
                                      f"{hex(self.slave_response[2])} {hex(self.slave_response[3])} {hex(self.slave_response[4])}")
+
 
     def error_parcing(self, error_register):
         # convert read register into binary string
@@ -1326,8 +1344,29 @@ class Ui_MainWindow:
         * Writing single registers
         """
         if  self.radioButton_targetangle.isChecked():
-            print((self.dial_angle.value()*4))
-            modbus_write_single((self.dial_angle.value()*4))
+            # calculating terget angle from user's setting
+            # encoder is 14 bits (16384 in dec) for 360 degree
+            try:
+                # removing angle sign
+                self.target_angle = self.lineEdit_targetangle.text()[:-1]
+                # transform to float
+                self.target_angle = float(self.target_angle)
+                # transform to 16384 decimal represantation
+                self.target_angle = self.target_angle * 16384 / 360
+                # convert to int for microcontroller
+                self.target_angle = int(self.target_angle)
+                modbus_write_single(self.target_angle)
+                print(self.target_angle)
+                print(type(self.target_angle))
+            except:
+                self.target_angle = 0
+                msg = QMessageBox()
+                msg.setWindowTitle("Incorrect request")
+                msg.setText("Please, use number to set the target angle")
+                msg.setIcon(QMessageBox.Warning)
+                x = msg.exec_()
+
+
 
     def enable_motor(self):
         """Enable motor"""
