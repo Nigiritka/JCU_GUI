@@ -1045,7 +1045,7 @@ class Ui_MainWindow:
         self.textEdit_log.setPlaceholderText("Log...")
         self.comboBox_plot_1.setCurrentIndex(1)
         self.comboBox_plot_2.setCurrentIndex(0)
-        self.comboBox_plot_3.setCurrentIndex(3)
+        self.comboBox_plot_3.setCurrentIndex(2)
         self.com_port_connected = 0
         self.angle = 0
         self.target_angle = 0
@@ -1071,6 +1071,7 @@ class Ui_MainWindow:
         self.z = [randint(0, 100) for _ in range(self.x_range)]
         self.a = [0 for _ in range(self.x_range)]
         self.b = [0 for _ in range(self.x_range)]
+        self.c = [0 for _ in range(self.x_range)]
 
         pen_1 = pg.mkPen(color="#32CD32", width=2)
         pen_2 = pg.mkPen(color="#FF8C00", width=2)
@@ -1079,7 +1080,8 @@ class Ui_MainWindow:
         self.speed_data_line = self.plot_widget_1.plot(self.x, self.b, pen=pen_3)
         self.angle_data_line =  self.plot_widget_2.plot(self.x, self.y, pen=pen_4)
         self.target_angle_data_line = self.plot_widget_2.plot(self.x, self.a, pen=pen_1)
-        self.temperature_data_line = self.plot_widget_3.plot(self.x, self.z, pen=pen_2)
+        # self.temperature_data_line = self.plot_widget_3.plot(self.x, self.z, pen=pen_2)
+        self.torque_data_line = self.plot_widget_3.plot(self.x, self.c, pen=pen_2)
         self.plot_widget_2.addLegend()
         styles = {'color': 'r', 'font-size': '12px'}
 
@@ -1114,8 +1116,8 @@ class Ui_MainWindow:
         self.plot_widget_3.setBackground('w')
         self.plot_widget_3.showGrid(x=1, y=1)
         self.plot_widget_3.setXRange(0, self.x_range, padding=0)
-        self.plot_widget_3.setYRange(-5, 105, padding=0)
-        self.plot_widget_3.setLabel('left', 'Temperature, C°', **styles)
+        self.plot_widget_3.setYRange(-5, 4005, padding=0)
+        self.plot_widget_3.setLabel('left', 'Torque, N/m', **styles)
         self.plot_widget_3.setLabel('bottom', 'Time, s', **styles)
         self.plot_widget_3.setBackground('#F0F0F0')
         self.plot_widget_3.getAxis('left').setPen('black')
@@ -1128,7 +1130,7 @@ class Ui_MainWindow:
     def update_plot_data(self):
         self.plot_widget_1.setYRange(-100, 100, padding=0)
         self.plot_widget_2.setYRange(-5, 365, padding=0)
-        self.plot_widget_3.setYRange(-5, 105, padding=0)
+        self.plot_widget_3.setYRange(-5, 4005, padding=0)
         # self.x = self.x[1:]  # Remove the first y element.
         # self.x.append(self.x[-1] + 1)  # Add a new value 1 higher than the last.
         # self.plot_widget_2.setYRange(-5, 365, padding=0)
@@ -1145,11 +1147,14 @@ class Ui_MainWindow:
         self.b = self.b[1:]  # Remove the first
         self.b.append(self.speed)
 
+        self.c = self.c[1:]  # Remove the first
+        self.c.append(self.torque)
+
         # Update plots
         self.speed_data_line.setData(self.x, self.b[-self.x_range:])
         self.angle_data_line.setData(self.x, self.y[-self.x_range:])
         self.target_angle_data_line.setData(self.x, self.a[-self.x_range:])
-        self.temperature_data_line.setData(self.x, self.z[-self.x_range:])
+        self.torque_data_line.setData(self.x, self.c[-self.x_range:])
 
     def get_time(self):
         """Function of getting real time"""
@@ -1238,14 +1243,14 @@ class Ui_MainWindow:
             self.lineEdit_errors.setText(str(self.slave_response[0]))
             self.lineEdit_angle.setText(str(self.slave_response[1]))
             self.lineEdit_speed.setText(str(np.int16(self.slave_response[2])))
-            self.lineEdit_torque.setText(str(self.slave_response[3]))
+            self.lineEdit_torque.setText(str(np.int16(self.slave_response[3])))
             self.temp = divmod(self.slave_response[4], 0x100)
             self.lineEdit_motortemp.setText(str(self.temp[1]))
             self.lineEdit_drivertemp.setText(str(self.temp[0]))
 
             self.angle = self.slave_response[1]
             self.speed = np.int16(self.slave_response[2])*11
-            self.torque = self.slave_response[3]
+            self.torque = np.int16(self.slave_response[3])
             self.motortemperature = self.temp[1]
             self.drivertemperature = self.temp[0]
 
@@ -1379,6 +1384,28 @@ class Ui_MainWindow:
         self.lineEdit_targetangle.setText(f"{self.dial_angle.value()/4096*360:.1f}°")
         if self.checkBox_follow.checkState():
             modbus_update_target_angle(self.dial_angle.value()*4)
+            # calculating terget angle from user's setting
+            # encoder is 14 bits (16384 in dec) for 360 degree
+            try:
+                # removing angle sign
+                self.target_angle = self.lineEdit_targetangle.text()[:-1]
+                # transform to float
+                self.target_angle = float(self.target_angle)
+                # transform to 16384 decimal represantation
+                self.target_angle = self.target_angle * 16384 / 360
+                # convert to int for microcontroller
+                self.target_angle = int(self.target_angle)
+                modbus_write_single(self.target_angle)
+                print(self.target_angle)
+                print(type(self.target_angle))
+            except:
+                self.target_angle = 0
+                msg = QMessageBox()
+                msg.setWindowTitle("Incorrect request")
+                msg.setText("Please, use number to set the target angle")
+                msg.setIcon(QMessageBox.Warning)
+                x = msg.exec_()
+
 
         # self.my_plot.update_plot()
 
