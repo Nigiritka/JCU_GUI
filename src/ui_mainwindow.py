@@ -1063,6 +1063,7 @@ class Ui_MainWindow:
         self.lineEdit_targetangle.editingFinished.connect(self.place_angle_mark)
         self.actionSettings.triggered.connect(self.open_comport_setting)
         self.pushButton_stopplots.clicked.connect(self.stop_thread)
+        self.pushButton_start.clicked.connect(self.read_coils)
 
         # Plot setting
         self.x_range = 200
@@ -1178,6 +1179,9 @@ class Ui_MainWindow:
                 self.label_lamp_connected.setPixmap(QtGui.QPixmap("D:\PROJECTS\PERSONAL\ROBOT_ARM\Software\JCU_GUI\pictures/red_20x20.png"))
 
         # self.my_plot.update_plot()
+
+    def read_coils(self):
+        modbus_read_coils(1, 9, 1)
 
     def read_single_status_register(self):
         """

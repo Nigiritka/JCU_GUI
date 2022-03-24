@@ -25,7 +25,7 @@ def open_com():
         print("Uffff")
 
 
-    # instr.debug = True
+    instr.debug = True
     # instr.serial.port                      # this is the serial port name
     instr.serial.baudrate = 3000000
     instr.serial.timeout = 0.020
@@ -48,11 +48,20 @@ def modbus_read_registers(modbus_function: int,
     return slave_response
 
 
+def modbus_read_coils(  modbus_function: int,
+                        register_address: int,
+                        amount_of_read: int,
+                        ):
+    slave_response = instr.read_bits(register_address, amount_of_read, modbus_function)
+    return slave_response
+
+
 def convert_float(value: int):
     # i = int(s, 16)                 # convert from hex to a Python int
     cp = pointer(c_int(value))       # make this into a c integer
     fp = cast(cp, POINTER(c_float))  # cast the int pointer to a float pointer
     return fp.contents.value         # dereference the pointer, get the float
+
 
 def modbus_write_single(value: int):
     instr.serial.timeout = 0.100
